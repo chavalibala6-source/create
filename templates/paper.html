@@ -5,54 +5,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ note.title if note else 'New Page' }}</title>
 <style>
-body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-form { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.08);}
-label { display: block; margin-top: 15px; font-weight: bold; }
-input[type=text], textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 15px; }
-button { margin-top: 15px; padding: 10px 20px; border: none; border-radius: 5px; background: #007bff; color: #fff; cursor: pointer; font-size: 16px; }
-button:hover { background: #0056b3; }
-</style>
-<style>
-  /* Navbar Styles */
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f5f5f7;
+    margin: 0;
+    padding: 0;
+    color: #1c1c1e;
+  }
+
+  /* Navbar */
   .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 40px;
-      background-color: #fff;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar .logo {
-      font-weight: 600;
-      font-size: 1.5em;
-      color: #0071e3;
-      text-decoration: none;
-    }
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      margin: 0;
-      padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .navbar .logo {
+    font-weight: 700;
+    font-size: 1.5em;
+    color: #0071e3;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  .navbar ul li {
+    margin-left: 25px;
+  }
+  .navbar ul li a {
+    text-decoration: none;
+    color: #1c1c1e;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  .navbar ul li a:hover {
+    color: #0071e3;
+  }
+
+  /* Page Container */
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  /* Form Card */
+  form {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    transition: transform 0.2s ease;
+  }
+  form:hover {
+    transform: translateY(-2px);
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+  input[type=text], textarea, input[type=file] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #d1d1d6;
+    font-size: 15px;
+    background: #fafafa;
+    transition: border 0.2s, background 0.2s;
+  }
+  input[type=text]:focus, textarea:focus, input[type=file]:focus {
+    border-color: #0071e3;
+    background: #fff;
+    outline: none;
+  }
+
+  /* Buttons */
+  button {
+    margin-top: 18px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #0071e3;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+  }
+  button:hover {
+    background: #005bbf;
+    transform: translateY(-1px);
+  }
+
+  /* Images */
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .image-gallery img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+  }
+  .image-gallery img:hover {
+    transform: scale(1.03);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .navbar {
+      padding: 12px 20px;
     }
     .navbar ul li {
-      margin-left: 25px;
+      margin-left: 15px;
     }
-    .navbar ul li a {
-      text-decoration: none;
-      color: #1c1c1e;
-      font-weight: 500;
-      transition: color 0.3s;
+    form {
+      padding: 18px;
     }
-    .navbar ul li a:hover {
-      color: #0071e3;
-    }
+  }
 </style>
-
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="navbar">
     <a href="/" class="logo">MyNotes</a>
     <ul>
@@ -60,35 +158,41 @@ button:hover { background: #0056b3; }
       <li><a href="/paper">Create Note</a></li>
     </ul>
   </nav>
-  <h1>{{ note.title if note else 'New Page' }}</h1>
 
-  <form action="/save_page" method="POST">
-    <input type="hidden" name="page_number" value="{{ note.page_number if note else 0 }}">
+  <div class="container">
+    <h1>{{ note.title if note else 'New Page' }}</h1>
+
+    <!-- Save Form -->
+    <form action="/save_page" method="POST">
+      <input type="hidden" name="page_number" value="{{ note.page_number if note else 0 }}">
+      
+      <label for="title">Page Title:</label>
+      <input type="text" id="title" name="title" value="{{ note.title if note else '' }}" required>
+      
+      <label for="text">Content:</label>
+      <textarea id="text" name="text" rows="16">{{ note.text if note else '' }}</textarea>
     
-    <label for="title">Page Title:</label>
-    <input type="text" id="title" name="title" value="{{ note.title if note else '' }}" required>
-    
-    <label for="text">Content:</label>
-    <textarea id="text" name="text" rows="20">{{ note.text if note else '' }}</textarea>
-   
-    <button type="submit">💾 Save</button>
-  </form>
-  
-  {% if note %}
-  <form action="/upload_image?page={{ note.page_number }}" method="POST" enctype="multipart/form-data">
-    <input type="file" name="image" accept="image/*" required>
-    <button type="submit">🖼️ Insert Image</button>
-  </form>
-  
-  {% if note.images %}
-  <h3>Images:</h3>
-  {% for img in note.images %}
-    <img src="/uploads/{{ img }}" alt="Image">
-  {% endfor %}
-  {% endif %}
-  {% endif %}
+      <button type="submit">💾 Save</button>
+    </form>
 
+    {% if note %}
+    <!-- Image Upload -->
+    <form action="/upload_image?page={{ note.page_number }}" method="POST" enctype="multipart/form-data">
+      <label for="image">Insert Image:</label>
+      <input type="file" id="image" name="image" accept="image/*" required>
+      <button type="submit">🖼️ Upload</button>
+    </form>
 
-
+    <!-- Image Gallery -->
+    {% if note.images %}
+    <h3>Images:</h3>
+    <div class="image-gallery">
+      {% for img in note.images %}
+        <img src="/uploads/{{ img }}" alt="Image">
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
 </body>
 </html>
